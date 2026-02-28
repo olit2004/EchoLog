@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { Play, BookOpen, Lock, Heart } from 'lucide-react';
+import PreviewCard from '@/components/PreviewCard';
 
 export default function LandingPage() {
   return (
     <div className="relative min-h-screen bg-[#0F0F0F] text-[#F9F7F5] overflow-hidden">
 
-      {/* Background */}
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-35 scale-105 will-change-transform"
@@ -15,7 +15,7 @@ export default function LandingPage() {
           }}
         />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/80 via-black/40 to-black" />
       </div>
 
       {/* Nav */}
@@ -98,85 +98,46 @@ export default function LandingPage() {
           <span className="text-[10px] uppercase tracking-[0.3em]">
             Scroll to Explore
           </span>
-          <div className="w-[1px] h-12 bg-gradient-to-b from-white to-transparent" />
+          <div className="w-px h-12 bg-linear-to-b from-white to-transparent" />
         </div>
       </main>
-
-{/* Film Strip Section */}
 <section
-  id="preview"
-  className="relative z-10 py-32 bg-[#151515] text-[#F9F7F5]"
->
-  <div className="max-w-7xl mx-auto px-6 md:px-10 text-center">
-    <h3 className="font-serif text-4xl mb-16 italic text-gray-200">
-      Designed for the Thoughtful Viewer.
-    </h3>
+      id="preview"
+      className="relative z-10 py-16 sm:py-24 md:py-32 bg-[#151515] text-[#F9F7F5]"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 text-center">
+        <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-10 sm:mb-16 italic text-gray-200">
+          Designed for the Thoughtful Viewer.
+        </h3>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
+          <PreviewCard
+            title="Reflect, Not Just Rate"
+            description="Write personal reflections about what a story made you feel, think, or question — beyond stars and scores."
+            tag="Journaling • Meaning"
+            bgColor="bg-gray-800"
+          />
 
-      {/* Card 1 */}
-      <div className="group relative aspect-[16/10] rounded-xl overflow-hidden shadow-2xl bg-black/90">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
+          <PreviewCard
+            title="Track Your Inner Patterns"
+            description="Notice how your tastes, moods, and themes evolve over time as you consume stories."
+            tag="Mood • Growth"
+            bgColor="bg-gray-700"
+            featured
+          />
 
-        <div className="absolute bottom-0 z-20 p-6 space-y-3 text-left">
-          <h4 className="font-serif text-2xl text-white">
-            Reflect, Not Just Rate
-          </h4>
-          <p className="text-sm text-gray-300 leading-relaxed">
-            Write personal reflections about what a story made you feel,
-            think, or question — beyond stars and scores.
-          </p>
-          <span className="text-[10px] uppercase tracking-widest text-[#D32F2F]">
-            Journaling • Meaning
-          </span>
+          <PreviewCard
+            title="Build a Personal Archive"
+            description="Create a private record of the stories that shaped you — searchable, organized, and yours alone."
+            tag="Memory • Privacy"
+            bgColor="bg-gray-800"
+          />
         </div>
-
-        <div className="absolute inset-0 bg-gray-800 group-hover:scale-105 transition-transform duration-700" />
       </div>
+    </section>
 
-      {/* Card 2 – Featured */}
-      <div className="group relative aspect-[16/10] rounded-xl overflow-hidden shadow-2xl bg-black/90 scale-110 z-10">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
 
-        <div className="absolute bottom-0 z-20 p-6 space-y-3 text-left">
-          <h4 className="font-serif text-2xl text-white">
-            Track Your Inner Patterns
-          </h4>
-          <p className="text-sm text-gray-300 leading-relaxed">
-            Notice how your tastes, moods, and themes evolve over time
-            as you consume stories.
-          </p>
-          <span className="text-[10px] uppercase tracking-widest text-[#D32F2F]">
-            Mood • Growth
-          </span>
-        </div>
 
-        <div className="absolute inset-0 bg-gray-700 group-hover:scale-105 transition-transform duration-700" />
-      </div>
-
-      {/* Card 3 */}
-      <div className="group relative aspect-[16/10] rounded-xl overflow-hidden shadow-2xl bg-black/90">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
-
-        <div className="absolute bottom-0 z-20 p-6 space-y-3 text-left">
-          <h4 className="font-serif text-2xl text-white">
-            Build a Personal Archive
-          </h4>
-          <p className="text-sm text-gray-300 leading-relaxed">
-            Create a private record of the stories that shaped you —
-            searchable, organized, and yours alone.
-          </p>
-          <span className="text-[10px] uppercase tracking-widest text-[#D32F2F]">
-            Memory • Privacy
-          </span>
-        </div>
-
-        <div className="absolute inset-0 bg-gray-800 group-hover:scale-105 transition-transform duration-700" />
-      </div>
-
-    </div>
-  </div>
-</section>
     </div>
   );
 }
