@@ -1,14 +1,22 @@
 @import "tailwindcss";
 
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
 
   /* Scrollbar variables */
+
   --scrollbar-bg: #f0f0f0;
   --scrollbar-thumb: #888;
   --scrollbar-thumb-hover: #555;
   --scrollbar-width: 10px;
+
+    --background: #F9F7F5;
+  --foreground: #1A1A1A;
+  --primary: #D32F2F; /* Cinema Red */
+  --accent: #EFE9E5;   /* Muted Beige */
 }
 
 @theme inline {
