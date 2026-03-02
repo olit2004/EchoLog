@@ -1,11 +1,16 @@
 import prisma from "@/lib/prisma";
+import bcrypt from "bcrypt";
 
 async function main() {
-  // Create a user
+  // hash password
+  const plainPassword = "password123";
+  const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
   const user = await prisma.user.create({
     data: {
       email: "jane.doe@example.com",
       name: "Jane Doe",
+      password: hashedPassword,
       image: "https://example.com/avatar.jpg",
       entries: {
         create: [
@@ -16,7 +21,8 @@ async function main() {
             releaseYear: 2010,
             rating: 4.8,
             mood: "Inspired",
-            reflection: "The concept of dreams within dreams was mind-bending.",
+            reflection:
+              "The concept of dreams within dreams was mind-bending.",
             themes: ["Dreams", "Reality", "Mind"],
             notableScene: "The hallway fight scene",
           },
@@ -27,7 +33,8 @@ async function main() {
             releaseYear: 2019,
             rating: 5.0,
             mood: "Thoughtful",
-            reflection: "A brilliant social commentary with shocking twists.",
+            reflection:
+              "A brilliant social commentary with shocking twists.",
             themes: ["Class", "Society", "Family"],
             notableScene: "The flooding of the semi-basement",
           },
@@ -36,7 +43,10 @@ async function main() {
     },
   });
 
-  console.log("Seeded user with entries:", user);
+  console.log("✅ Seeded user with hashed password:", {
+    id: user.id,
+    email: user.email,
+  });
 }
 
 main()
@@ -44,7 +54,7 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e);
+    console.error("❌ Seed error:", e);
     await prisma.$disconnect();
     process.exit(1);
   });

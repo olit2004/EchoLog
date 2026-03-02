@@ -1,6 +1,51 @@
+'use client'
 import Link from "next/link";
+import { useActionState } from 'react'
+import { useRouter } from 'next/navigation'
+import { ActionResponse } from "@/lib/validation/authvalidation";
+import { Login } from "@/app/actions/auth";
+
+
+const initialState: ActionResponse = {
+  success: false,
+  message: '',
+  errors: undefined,
+}
 
 const LoginPage: React.FC = () => {
+const router = useRouter()
+const [state, formAction, isPending] = useActionState<  ActionResponse, FormData >(
+      
+        async (prevState: ActionResponse, formData: FormData) => {
+
+        try {
+          const result= await Login(formData)
+          console.log("the server responeded with ",result)
+          if (result.success) {
+              
+                router.push('/dashboard')
+                router.refresh()
+          }
+
+        return result
+      }
+      catch (err) {
+      return {
+        success: false,
+        message: (err as Error).message || 'An error occurred',
+        errors: undefined,
+      }
+    }
+    },
+    initialState )
+
+
+
+
+
+
+
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -14,7 +59,7 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Form */}
-      <form className="space-y-5">
+      <form className="space-y-5" action={formAction}>
         {/* Email */}
         <div className="space-y-1">
           <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">
@@ -22,6 +67,7 @@ const LoginPage: React.FC = () => {
           </label>
           <input
             type="email"
+            name="email"
             className="
               w-full px-5 py-4
               bg-[#141414]
@@ -33,7 +79,8 @@ const LoginPage: React.FC = () => {
               focus:ring-1 focus:ring-[#D32F2F]
               outline-none
               transition-all
-            "
+       "
+
           />
         </div>
 
@@ -52,6 +99,7 @@ const LoginPage: React.FC = () => {
           </div>
           <input
             type="password"
+            name="password"
             className="
               w-full px-5 py-4
               bg-[#141414]

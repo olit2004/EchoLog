@@ -10,61 +10,9 @@ import { generateTokens, type SessionPayload} from "@/lib/auth";
 import {createUser} from "@/lib/auth"
 
 
-
-export const registerSchema = z
-  .object({
-    email: z
-      .string()
-      .min(1, "Email is required")
-      .email("Invalid email format")
-      .trim()
-      .toLowerCase(),
-
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password too long")
-      .regex(/[A-Z]/, "Must include at least one uppercase letter")
-      .regex(/[a-z]/, "Must include at least one lowercase letter")
-      .regex(/[0-9]/, "Must include at least one number"),
-
-    confirmPassword: z
-      .string()
-      .min(1, "Please confirm your password"),
-
-    name: z
-      .string()
-      .min(2, "Name too short")
-      .max(50, "Name too long")
-      .optional(),
-
-    avatar: z
-      .string()
-      .url("Avatar must be a valid URL")
-      .optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  })
+import {registerSchema, loginSchema, type loginData ,type registerData ,type ActionResponse} from "@/lib/validation/authvalidation"
 
 
-export const loginSchema = z.object({
-      email: z.string().min(1, 'Email is required').email('Invalid email format'),
-      password: z.string().min(1,'password is required '),
-});
-
-
-export type loginData = z.infer<typeof loginSchema>
-export type registerData = z.infer<typeof registerSchema>
-
-
-export type ActionResponse = {
-  success: boolean
-  message: string
-  errors?: Record<string, string[]>
-  error?: string
-}
 
 
 export async  function createSession(payload:SessionPayload) {
@@ -91,15 +39,18 @@ export async  function createSession(payload:SessionPayload) {
 
 export async function Login (formData:FormData):Promise<ActionResponse>{
   try{
-
+    
+    console.log(" the login actions started running now" )
     const data= {
       email: formData.get('email') as string,
       password :formData.get('password') as string
     }
-
+   console.log(data)
     //validate the incoming data 
     const validatedData = loginSchema.safeParse(data);
     if (!validatedData.success){
+    console.log("input data is invalid")
+
       return {
          success: false,
         message: "validation failed",
@@ -107,9 +58,13 @@ export async function Login (formData:FormData):Promise<ActionResponse>{
 
       }
     }
+    console.log("input data is valid")
     // get the user 
     const user= await getUserByEmail(data.email)
-    if (!user) 
+    console.log("the user is the user",user)
+    if (!user) {
+    console.log("user found")
+
       return {
         success: false,
         message: 'Invalid email or password',
@@ -117,11 +72,14 @@ export async function Login (formData:FormData):Promise<ActionResponse>{
           email: ['Invalid email or password'],
         },
       }
-    
+    }
+    console.log("user found")
+    console.log(user)
 
     // verify password 
     const isValid= await verifyPassword(data.password,user.password)
     if (!isValid) {
+      console.log("password isnot correct")
       return {
         success: false,
         message: 'Invalid email or password',
@@ -132,7 +90,7 @@ export async function Login (formData:FormData):Promise<ActionResponse>{
     }
     // Create session
     await createSession({userId:user.id,role:"user"})
-
+    console.log("loged in success fullty")
     return {
       success: true,
       message: 'Signed in successfully',
