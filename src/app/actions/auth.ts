@@ -10,15 +10,15 @@ import { generateTokens, type SessionPayload} from "@/lib/auth";
 import {createUser} from "@/lib/auth"
 
 
+
 import {registerSchema, loginSchema, type loginData ,type registerData ,type ActionResponse} from "@/lib/validation/authvalidation"
-
-
-
 
 export async  function createSession(payload:SessionPayload) {
 
-        const {accessToken,refreshToken}=generateTokens(payload);
 
+
+        
+        const {accessToken,refreshToken}=generateTokens(payload);
         const cookieStore = await cookies()
         cookieStore.set('access_token', accessToken, {
                                                     httpOnly: true,
@@ -35,7 +35,6 @@ export async  function createSession(payload:SessionPayload) {
 });
                                           
 }
-
 
 export async function Login (formData:FormData):Promise<ActionResponse>{
   try{
@@ -108,22 +107,30 @@ export async function Login (formData:FormData):Promise<ActionResponse>{
 }
 
 export async function Register (formData:FormData):Promise<ActionResponse>{
+  console.log("start running the code ")
   
   
   try{
+
+    console.log(formData)
 
     const data= {
       email: formData.get('email') as string,
       confirmPassword:formData.get('confirmPassword') as string,
       password :formData.get('password') as string,
-      name: formData.get("name") as string,
-      avatar: formData.get("avatar") as string
-      
+      name: formData.get("fullName") as string,
+
     }
+
+    console.log(data,"is data")
+    
 
     //validate the incoming data 
     const validatedData = registerSchema.safeParse(data);
     if (!validatedData.success){
+    
+      console.log("the data is not validated ",validatedData)
+   
       return {
          success: false,
         message: "validation failed",
@@ -131,19 +138,23 @@ export async function Register (formData:FormData):Promise<ActionResponse>{
 
       }
     }
+    
     // get the user 
     const existingUser= await getUserByEmail(data.email)
-    if (existingUser) 
+    if (existingUser) {
+      console.log("the user already exists", existingUser)
       return {
         success: false,
         message: 'TRY ANOTHER EMAIL',
         errors: {
           email: ["try another email"],
         },
-      }
+      }}
     
-    const user = await createUser(data);
+const { confirmPassword, ...userData } = data;
+const user = await createUser(userData);
 
+    console.log("the user is ",user )
 
    if (!user) {
       return {
@@ -174,3 +185,5 @@ export async function Register (formData:FormData):Promise<ActionResponse>{
 
 
     
+
+// 98Olit21!

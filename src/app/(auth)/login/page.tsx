@@ -1,50 +1,42 @@
 'use client'
+
 import Link from "next/link";
-import { useActionState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useActionState } from "react";
+import { useRouter } from "next/navigation";
 import { ActionResponse } from "@/lib/validation/authvalidation";
 import { Login } from "@/app/actions/auth";
 
-
 const initialState: ActionResponse = {
   success: false,
-  message: '',
+  message: "",
   errors: undefined,
-}
+};
 
 const LoginPage: React.FC = () => {
-const router = useRouter()
-const [state, formAction, isPending] = useActionState<  ActionResponse, FormData >(
-      
-        async (prevState: ActionResponse, formData: FormData) => {
+  const router = useRouter();
 
-        try {
-          const result= await Login(formData)
-          console.log("the server responeded with ",result)
-          if (result.success) {
-              
-                router.push('/dashboard')
-                router.refresh()
-          }
+  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
+    async (prevState: ActionResponse, formData: FormData) => {
+      try {
+        const result = await Login(formData);
+        console.log("Server responded with:", result);
 
-        return result
+        if (result.success) {
+          router.push("/dashboard");
+          router.refresh();
+        }
+
+        return result;
+      } catch (err) {
+        return {
+          success: false,
+          message: (err as Error).message || "An error occurred",
+          errors: undefined,
+        };
       }
-      catch (err) {
-      return {
-        success: false,
-        message: (err as Error).message || 'An error occurred',
-        errors: undefined,
-      }
-    }
     },
-    initialState )
-
-
-
-
-
-
-
+    initialState
+  );
 
   return (
     <div className="space-y-8">
@@ -68,19 +60,9 @@ const [state, formAction, isPending] = useActionState<  ActionResponse, FormData
           <input
             type="email"
             name="email"
-            className="
-              w-full px-5 py-4
-              bg-[#141414]
-              text-gray-200
-              placeholder-gray-600
-              rounded-xl
-              border border-[#222]
-              focus:border-[#D32F2F]
-              focus:ring-1 focus:ring-[#D32F2F]
-              outline-none
-              transition-all
-       "
-
+            placeholder="director@echolog.com"
+            required
+            className="w-full px-5 py-4 bg-[#141414] text-gray-200 placeholder-gray-600 rounded-xl border border-[#222] focus:border-[#D32F2F] focus:ring-1 focus:ring-[#D32F2F] outline-none transition-all"
           />
         </div>
 
@@ -100,35 +82,26 @@ const [state, formAction, isPending] = useActionState<  ActionResponse, FormData
           <input
             type="password"
             name="password"
-            className="
-              w-full px-5 py-4
-              bg-[#141414]
-              text-gray-200
-              placeholder-gray-600
-              rounded-xl
-              border border-[#222]
-              focus:border-[#D32F2F]
-              focus:ring-1 focus:ring-[#D32F2F]
-              outline-none
-              transition-all
-            "
+            placeholder="••••••••"
+            required
+            className="w-full px-5 py-4 bg-[#141414] text-gray-200 placeholder-gray-600 rounded-xl border border-[#222] focus:border-[#D32F2F] focus:ring-1 focus:ring-[#D32F2F] outline-none transition-all"
           />
         </div>
+
+        {/* Generic Error at Bottom */}
+        {(!state.success && (state.message || state.errors)) && (
+          <div className="text-center text-red-500 text-sm font-semibold">
+            {state.message || "Invalid email or password"}
+          </div>
+        )}
 
         {/* Submit */}
         <button
           type="submit"
-          className="
-            w-full py-4 rounded-xl
-            bg-[#D32F2F]
-            text-white
-            font-serif font-bold text-lg
-            shadow-lg shadow-[#D32F2F]/20
-            hover:bg-[#b22727]
-            transition-all
-          "
+          disabled={isPending}
+          className="w-full py-4 rounded-xl bg-[#D32F2F] text-white font-serif font-bold text-lg shadow-lg shadow-[#D32F2F]/20 hover:bg-[#b22727] transition-all"
         >
-          Enter Vault
+          {isPending ? "Signing In..." : "Enter EchoLog"}
         </button>
       </form>
 
@@ -138,25 +111,14 @@ const [state, formAction, isPending] = useActionState<  ActionResponse, FormData
           <span className="w-full border-t border-[#222]" />
         </div>
         <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold text-gray-500">
-          <span className="bg-[#0E0E0E] px-2">
-            Or continue with
-          </span>
+          <span className="bg-[#0E0E0E] px-2">Or continue with</span>
         </div>
       </div>
 
       {/* Google Auth */}
       <button
         type="button"
-        className="
-          w-full py-3 rounded-xl
-          border border-[#222]
-          bg-[#111]
-          text-gray-300
-          font-bold text-sm
-          flex items-center justify-center gap-3
-          hover:bg-[#161616]
-          transition-all
-        "
+        className="w-full py-3 rounded-xl border border-[#222] bg-[#111] text-gray-300 font-bold text-sm flex items-center justify-center gap-3 hover:bg-[#161616] transition-all"
       >
         <img
           src="https://www.svgrepo.com/show/355037/google.svg"

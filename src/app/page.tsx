@@ -39,7 +39,7 @@ export default function LandingPage() {
             Sign In
           </Link>
           <Link
-            href="/signup"
+            href="/register"
             className="bg-[#F9F7F5] text-black px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest hover:bg-[#D32F2F] hover:text-white transition-all shadow-xl"
           >
             Get Started
