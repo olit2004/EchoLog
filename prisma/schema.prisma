@@ -13,11 +13,26 @@ datasource db {
   provider = "postgresql"
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
+  password       String
   name          String?
   image         String?
+  avatar        String?
   entries       Entry[]
   createdAt     DateTime  @default(now())
 }
@@ -30,7 +45,7 @@ model Entry {
   releaseYear   Int?
   
   rating        Float     @default(0.0)
-  mood          String    // e.g., "Inspired", "Melancholic"
+  mood          String    
   reflection    String    @db.Text
   
   themes        String[]  // Array of strings for tags
